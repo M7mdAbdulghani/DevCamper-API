@@ -4,13 +4,22 @@ const dotenv = require("dotenv");
 //const logger = require("./middleware/logger");
 //Now this is the third party logger middleware
 const morgan = require("morgan");
+const colors = require("colors");
+const errorHandler = require("./middleware/error");
+const connectDB = require("./config/db");
 const app = express();
+
+//Body Parser
+app.use(express.json());
+
+//Load variables from env
+dotenv.config({ path: "./config/config.env" });
 
 //Routes Files
 const bootcamps = require("./routes/bootcamps");
 
-//Load variables from env
-dotenv.config({ path: "./config/config.env" });
+//Connect to database
+connectDB();
 
 //To be able to use that middleware, we have to use this line
 //app.use(logger);
@@ -28,7 +37,14 @@ if (process.env.NODE_ENV === "development") {
 }
 
 //Mount Routes
+/*
+    This means use bootcamps router (bootcamps variable)
+    for any URL that begins with /api/v1/bootcamps
+*/
 app.use("/api/v1/bootcamps", bootcamps);
+
+//Error Handler
+app.use(errorHandler);
 
 //Routes
 // app.get("/", (req, res) => {
@@ -59,8 +75,15 @@ app.use("/api/v1/bootcamps", bootcamps);
 
 //Run the server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(
-    `Server is running in ${process.env.NODE_ENV} mode on port ${PORT}`
+    `Server is running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow
+      .bold
   );
+});
+
+//Handelling Global unhandledRejection Promises
+process.on("unhandledRejection", (err, promise) => {
+  console.log(`Error: ${err.message}`.red);
+  server.close(() => process.exit(1));
 });

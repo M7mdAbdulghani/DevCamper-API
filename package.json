@@ -10,9 +10,13 @@
   "author": "Mohamed Abdulghani",
   "license": "MIT",
   "dependencies": {
+    "colors": "^1.4.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "morgan": "^1.9.1"
+    "mongoose": "^5.9.6",
+    "morgan": "^1.9.1",
+    "node-geocoder": "^3.27.0",
+    "slugify": "^1.4.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"
