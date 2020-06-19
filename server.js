@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 //Now this is the third party logger middleware
 const morgan = require("morgan");
 const colors = require("colors");
+const fileupload = require("express-fileupload");
 const errorHandler = require("./middleware/error");
 const connectDB = require("./config/db");
 const app = express();
@@ -36,6 +37,12 @@ connectDB();
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
+//Express file upload
+app.use(fileupload());
+
+//Serve Static Files
+app.use(express.static(__dirname + "/public"));
 
 //Mount Routes
 /*
