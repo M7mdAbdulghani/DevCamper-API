@@ -17,11 +17,14 @@ const coursesRouter = require("./courses");
 //Re-route to other resource routers
 router.use("/:bootcampId/courses", coursesRouter);
 
+const Bootcamp = require("../models/Bootcamp");
+const advancedResults = require("../middleware/advancedResults");
+
 router.route("/radius/:city/:distance").get(getBootcampsInRadius);
 
 router
   .route("/")
-  .get(getBootcamps)
+  .get(advancedResults(Bootcamp, "courses"), getBootcamps)
   .post(createBootcamp)
   .delete(deleteBootcamps);
 
